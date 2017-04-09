@@ -24,7 +24,15 @@ export function react2angular<Props>(
     || []
 
   return {
-    bindings: fromPairs(names.map(_ => [_, '<'])),
+    bindings: fromPairs(names.map(name => {
+      let bindingName = name;
+      let bindingValue = '<';
+      if (name.startsWith('&')) {
+        bindingName = bindingName.substring(1);
+        bindingValue = '&';
+      }
+      return [bindingName, bindingValue];
+    })),
     controller: ['$element', class extends NgComponent<Props, void> {
       constructor(private $element: IAugmentedJQuery) {
         super()
